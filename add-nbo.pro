@@ -17,13 +17,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     add-nbo.cpp \
-    mainwindow.cpp
 
 HEADERS += \
-    mainwindow.h
 
 FORMS += \
-    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
