@@ -1,27 +1,37 @@
-#include <stdio.h> // for printf
-#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
+#include <arpa/inet.h>
 
-int main(int argc, char*argv[]) {
-    uint32_t n1, n2, sum;
-    FILE *file1 = fopen(argv[1], "rb");
-    FILE *file2 = fopen(argv[2], "rb");
+uint32_t file_read(char* fileName){
+    uint32_t A;
+    FILE* file = fopen(fileName, "rb");
+    if(fread(&A, 1, sizeof(uint32_t), file) == 0){
+        fclose(file);
+        printf("Error\n");
+        exit(1);
+    }
+    fclose(file);
 
+    return A;
+}
+
+int main(int argc, char* argv[]) {
     if(argc != 3) {
-        printf("Usage : %s <filename1> <filename2>\n", argv[0]);
+        printf("Usage: %s <file1> <file2>\n", argv[0]);
         return 0;
     }
+    uint32_t a, b, sum;
 
-    fread(&n1, sizeof(n1), 1, file1);
-    sum = ((n1 & 0xff000000)>> 24) | ((n1 & 0x00ff0000) >> 8) | ((n1& 0x0000ff00) << 8) | ((n1& 0x000000ff) <<24);
-    n1 = sum;
-    printf("n1=0x%04x\n", n1);
+    a = file_read(argv[1]);
+    b = file_read(argv[2]);
 
-    fread(&n2, sizeof(n2), 1, file2);
-    sum = ((n2 & 0xff000000)>> 24) | ((n2 & 0x00ff0000) >> 8) | ((n2& 0x0000ff00) << 8) | ((n2& 0x000000ff) <<24);
-    n2 = sum;
-    printf("n2=0x%04x\n", n2);
+    a = ntohl(a);
+    b = ntohl(b);
 
-    sum = n2 + n1;
-    printf("sum=0x%04x\n", sum);
+    sum = a + b;
+
+    printf("%d(0x%2x) + %d(0x%2x) = %d(0x%2x)\n", a, a, b, b, sum, sum);
+
+    return 0;
 }
